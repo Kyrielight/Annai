@@ -20,7 +20,7 @@ func main() {
 		}
 
 		req := request.NewRequest(c.QueryParam("query"))
-		return c.String(http.StatusOK, resolver.Lookup(req).String())
+		return c.Redirect(http.StatusTemporaryRedirect, resolver.Lookup(req).String())
 	})
 	e.Logger.Fatal(e.Start(":8080"))
 

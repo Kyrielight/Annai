@@ -36,5 +36,6 @@ func NewRequest(query string) Request {
 	return Request{
 		Command:   command,
 		Arguments: arguments,
+		Tag:       language.English,
 	}
 }

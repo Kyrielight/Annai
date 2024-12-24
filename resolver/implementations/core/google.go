@@ -2,6 +2,7 @@ package core
 
 import (
 	"net/url"
+	"strings"
 
 	"golang.org/x/text/language"
 
@@ -15,18 +16,30 @@ var baseURLs = map[language.Tag]url.URL{
 	language.Japanese:       {Scheme: "https", Host: "google.co.jp"},
 }
 
-func getUrl(r request.Request) *url.URL {
+func getGoogleUrl(r request.Request) *url.URL {
 	// Implicit default for this resolver is (no-region) English.
 	url := baseURLs[language.English]
 	switch r.Tag {
+	case language.BritishEnglish:
+		url = baseURLs[language.BritishEnglish]
 	case language.Japanese:
 		url = baseURLs[language.Japanese]
 	}
+
+	if len(r.Arguments) == 0 {
+		return &url
+	}
+
+	url.Path = "search"
+	search := url.Query()
+	search.Set("q", strings.Join(r.Arguments, " "))
+	url.RawQuery = search.Encode()
+
 	return &url
 }
 
 func GOOGLE() model.Resolver {
 	return model.Resolver{
-		GetUrl: getUrl,
+		GetUrl: getGoogleUrl,
 	}
 }
