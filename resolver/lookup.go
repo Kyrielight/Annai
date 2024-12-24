@@ -13,5 +13,7 @@ func Lookup(r request.Request) *url.URL {
 	if resolver, ok := resolvers[r.Command]; ok {
 		return resolver.GetUrl(r)
 	}
+	// TODO: Process defaults differently - the command should be included
+	// in arguments as the Google resolver is implicit.
 	return defaultResolver.GetUrl(r)
 }
