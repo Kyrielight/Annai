@@ -6,47 +6,47 @@ import (
 	"moe.best.annai/request"
 )
 
-func TestGetUrl_SchemeIsHttps(t *testing.T) {
+func TestGoogleGetUrl_SchemeIsHttps(t *testing.T) {
 	request := request.NewRequest("g")
 
 	url := GOOGLE().GetUrl(request)
 
 	if url.Scheme != "https" {
-		t.Errorf("Scheme = %s, want 'https'", url.Scheme)
+		t.Errorf("Scheme = '%s', want 'https'", url.Scheme)
 	}
 }
 
-func TestGetUrl_DefaultLanguageIsEnglish(t *testing.T) {
+func TestGoogleGetUrl_DefaultLanguageIsEnglish(t *testing.T) {
 	request := request.NewRequest("g")
 
 	url := GOOGLE().GetUrl(request)
 
 	if url.Host != "google.com" {
-		t.Errorf("Host = %s, want 'google.com'", url.Host)
+		t.Errorf("Host = '%s', want 'google.com'", url.Host)
 	}
 }
 
-func TestGetUrl_NoArguments(t *testing.T) {
+func TestGoogleGetUrl_NoArguments(t *testing.T) {
 	request := request.NewRequest("g")
 
 	url := GOOGLE().GetUrl(request)
 
 	if url.Query().Has("query") {
-		t.Errorf("Query 'q' = %s, want nothing", url.Query().Get("q"))
+		t.Errorf("Query 'q' = '%s', want nothing", url.Query().Get("q"))
 	}
 }
 
-func TestGetUrl_WithArgument_PathSetToSearch(t *testing.T) {
+func TestGoogleGetUrl_WithArgument_PathSetToSearch(t *testing.T) {
 	request := request.NewRequest("g hello")
 
 	url := GOOGLE().GetUrl(request)
 
 	if url.Path != "search" {
-		t.Errorf("Path = %s, want 'search'", url.Path)
+		t.Errorf("Path = '%s', want 'search'", url.Path)
 	}
 }
 
-func TestGetUrl_SingleArgument(t *testing.T) {
+func TestGoogleGetUrl_SingleArgument(t *testing.T) {
 	request := request.NewRequest("g hello")
 
 	url := GOOGLE().GetUrl(request)
@@ -56,10 +56,10 @@ func TestGetUrl_SingleArgument(t *testing.T) {
 	}
 	query := url.Query().Get("q")
 	if query != "hello" {
-		t.Errorf("Query 'q' = %s, want 'hello", query)
+		t.Errorf("Query 'q' = '%s', want 'hello'", query)
 	}
 }
-func TestGetUrl_MultipleArguments(t *testing.T) {
+func TestGoogleGetUrl_MultipleArguments(t *testing.T) {
 	request := request.NewRequest("g hello world")
 
 	url := GOOGLE().GetUrl(request)
@@ -69,6 +69,6 @@ func TestGetUrl_MultipleArguments(t *testing.T) {
 	}
 	query := url.Query().Get("q")
 	if query != "hello world" {
-		t.Errorf("Query 'q' = %s, want 'hello world'", query)
+		t.Errorf("Query 'q' = '%s', want 'hello world'", query)
 	}
 }

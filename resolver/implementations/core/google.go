@@ -19,11 +19,9 @@ var baseURLs = map[language.Tag]url.URL{
 func getGoogleUrl(r request.Request) *url.URL {
 	// Implicit default for this resolver is (no-region) English.
 	url := baseURLs[language.English]
-	switch r.Tag {
-	case language.BritishEnglish:
-		url = baseURLs[language.BritishEnglish]
-	case language.Japanese:
-		url = baseURLs[language.Japanese]
+
+	if localUrl, exists := baseURLs[r.Tag]; exists {
+		url = localUrl
 	}
 
 	if len(r.Arguments) == 0 {
