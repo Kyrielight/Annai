@@ -1,15 +1,15 @@
-name: Docker 
+name: Docker Publish
 
 on:
   schedule:
     # Refresh every month
     - cron: '0 0 1 * *'
   push:
-    branches: [ $default-branch ]
+    branches: [ "main" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ "main" ]
 
 env:
   # Use docker.io for Docker Hub if empty
