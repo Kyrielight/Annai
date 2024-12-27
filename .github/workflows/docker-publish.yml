@@ -1,13 +1,14 @@
-name: Docker 
+name: Docker Publish
 
 on:
   schedule:
     # Refresh every month
     - cron: '0 0 1 * *'
   push:
-    branches: [ $default-branch ]
+    # Temporarily enable for all push events, for testing.
+    # branches: [ $default-branch ]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    # tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ $default-branch ]
 
