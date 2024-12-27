@@ -15,5 +15,10 @@ func Lookup(r request.Request) *url.URL {
 	}
 	// TODO: Process defaults differently - the command should be included
 	// in arguments as the Google resolver is implicit.
-	return defaultResolver.GetUrl(r)
+	defaultRequest := request.Request{
+		Command:   "default",
+		Arguments: append([]string{r.Command}, r.Arguments...),
+	}
+
+	return defaultResolver.GetUrl(defaultRequest)
 }
