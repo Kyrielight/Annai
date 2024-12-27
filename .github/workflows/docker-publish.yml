@@ -5,12 +5,11 @@ on:
     # Refresh every month
     - cron: '0 0 1 * *'
   push:
-    # Temporarily enable for all push events, for testing.
-    # branches: [ $default-branch ]
+    branches: [ "main" ]
     # Publish semver tags as releases.
-    # tags: [ 'v*.*.*' ]
+    tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ "main" ]
 
 env:
   # Use docker.io for Docker Hub if empty
