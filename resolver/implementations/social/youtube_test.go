@@ -12,7 +12,7 @@ func TestYouTubeGetUrl_Scheme(t *testing.T) {
 	url := YOUTUBE().GetUrl(request)
 
 	if url.Scheme != "https" {
-		t.Errorf("Scheme = %s, want 'https'", url.Scheme)
+		t.Errorf("Scheme = '%s', want 'https'", url.Scheme)
 	}
 }
 func TestYouTubeGetUrl_DefaultLanguageIsEnglish(t *testing.T) {

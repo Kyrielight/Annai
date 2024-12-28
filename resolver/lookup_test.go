@@ -6,6 +6,7 @@ import (
 
 	"moe.best.annai/request"
 	"moe.best.annai/resolver/implementations/core"
+	"moe.best.annai/resolver/implementations/dictionaries"
 	"moe.best.annai/resolver/implementations/social"
 	"moe.best.annai/resolver/model"
 )
@@ -28,6 +29,14 @@ func TestLookup_google_isGoogle(t *testing.T) {
 
 func TestLookup_yt_isYouTube(t *testing.T) {
 	testLookup("yt", social.YOUTUBE(), t)
+}
+
+func TestLookup_j_isJisho(t *testing.T) {
+	testLookup("j", dictionaries.JISHO(), t)
+}
+
+func TestLookup_jisho_isJisho(t *testing.T) {
+	testLookup("jisho", dictionaries.JISHO(), t)
 }
 
 func TestLookup_youtube_isYouTube(t *testing.T) {
