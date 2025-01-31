@@ -1,33 +1,73 @@
 package core
 
 import (
+	"net/http"
 	"testing"
 
-	"moe.best.annai/request"
+	"moe.best.annai/session"
 )
 
-func TestGoogleGetUrl_SchemeIsHttps(t *testing.T) {
-	request := request.NewRequest("g")
+var headers = http.Header{}
 
-	url := GOOGLE().GetUrl(request)
+func TestGoogleGetUrl_SchemeIsHttps(t *testing.T) {
+	s := session.NewSession("g", headers)
+
+	url := GOOGLE().GetUrl(s)
 
 	if url.Scheme != "https" {
 		t.Errorf("Scheme = '%s', want 'https'", url.Scheme)
 	}
 }
 
-func TestGoogleGetUrl_DefaultLanguageIsEnglish(t *testing.T) {
-	request := request.NewRequest("g")
+func TestGoogleGetUrl_LanguageNotSpecified_DefaultsToEnglish(t *testing.T) {
+	headers := http.Header{}
+	s := session.NewSession("g", headers)
 
-	url := GOOGLE().GetUrl(request)
+	url := GOOGLE().GetUrl(s)
 
 	if url.Host != "google.com" {
 		t.Errorf("Host = '%s', want 'google.com'", url.Host)
 	}
 }
 
+func TestGoogleGetUrl_English(t *testing.T) {
+	headers := http.Header{}
+	headers.Add("Accept-Language", "en")
+	s := session.NewSession("g", headers)
+
+	url := GOOGLE().GetUrl(s)
+
+	if url.Host != "google.com" {
+		t.Errorf("Host = '%s', want 'google.com'", url.Host)
+	}
+}
+
+func TestGoogleGetUrl_BritishEnglish(t *testing.T) {
+	headers := http.Header{}
+	headers.Add("Accept-Language", "en-uk")
+	s := session.NewSession("g", headers)
+
+	url := GOOGLE().GetUrl(s)
+
+	if url.Host != "google.co.uk" {
+		t.Errorf("Host = '%s', want 'google.co.uk'", url.Host)
+	}
+}
+
+func TestGoogleGetUrl_Japanese(t *testing.T) {
+	headers := http.Header{}
+	headers.Add("Accept-Language", "ja")
+	s := session.NewSession("g", headers)
+
+	url := GOOGLE().GetUrl(s)
+
+	if url.Host != "google.co.jp" {
+		t.Errorf("Host = '%s', want 'google.co.jp'", url.Host)
+	}
+}
+
 func TestGoogleGetUrl_NoArguments(t *testing.T) {
-	request := request.NewRequest("g")
+	request := session.NewSession("g", headers)
 
 	url := GOOGLE().GetUrl(request)
 
@@ -37,7 +77,7 @@ func TestGoogleGetUrl_NoArguments(t *testing.T) {
 }
 
 func TestGoogleGetUrl_WithArgument_PathSetToSearch(t *testing.T) {
-	request := request.NewRequest("g hello")
+	request := session.NewSession("g hello", headers)
 
 	url := GOOGLE().GetUrl(request)
 
@@ -47,7 +87,7 @@ func TestGoogleGetUrl_WithArgument_PathSetToSearch(t *testing.T) {
 }
 
 func TestGoogleGetUrl_SingleArgument(t *testing.T) {
-	request := request.NewRequest("g hello")
+	request := session.NewSession("g hello", headers)
 
 	url := GOOGLE().GetUrl(request)
 
@@ -60,7 +100,7 @@ func TestGoogleGetUrl_SingleArgument(t *testing.T) {
 	}
 }
 func TestGoogleGetUrl_MultipleArguments(t *testing.T) {
-	request := request.NewRequest("g hello world")
+	request := session.NewSession("g hello world", headers)
 
 	url := GOOGLE().GetUrl(request)
 
