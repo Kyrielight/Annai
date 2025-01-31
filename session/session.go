@@ -1,20 +1,19 @@
-package request
+package session
 
 import (
+	"net/http"
 	"strings"
-
-	"golang.org/x/text/language"
 )
 
-type Request struct {
+type Session struct {
 	Command   string
 	Arguments []string
-	Tag       language.Tag
+	Metadata  Metadata
 }
 
-func NewRequest(query string) Request {
+func NewSession(query string, header http.Header) Session {
 	if len(query) == 0 {
-		return Request{}
+		return Session{}
 	}
 
 	arguments := []string{}
@@ -33,9 +32,9 @@ func NewRequest(query string) Request {
 		arguments = append(arguments, rawArguments[1:]...)
 	}
 
-	return Request{
+	return Session{
 		Command:   command,
 		Arguments: arguments,
-		Tag:       language.English,
+		Metadata:  newMetadata(header),
 	}
 }

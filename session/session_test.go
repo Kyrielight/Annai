@@ -1,14 +1,17 @@
-package request
+package session
 
 import (
+	"net/http"
 	"strings"
 	"testing"
 )
 
-func TestNewRequest_TargetCommandOnly(t *testing.T) {
+var _HEADERS = http.Header{}
+
+func TestNewSession_TargetCommandOnly(t *testing.T) {
 	query := "google"
 
-	request := NewRequest(query)
+	request := NewSession(query, _HEADERS)
 
 	if (request.Command) != query {
 		t.Errorf("Command = %s, want '%s'", request.Command, query)
@@ -18,10 +21,10 @@ func TestNewRequest_TargetCommandOnly(t *testing.T) {
 	}
 }
 
-func TestNewRequest_SlashRequestOnly(t *testing.T) {
+func TestNewSession_SlashRequestOnly(t *testing.T) {
 	query := "google/"
 
-	request := NewRequest(query)
+	request := NewSession(query, _HEADERS)
 
 	if (request.Command) != "google" {
 		t.Errorf("Command = %s, want '%s'", request.Command, "google")
@@ -31,10 +34,10 @@ func TestNewRequest_SlashRequestOnly(t *testing.T) {
 	}
 }
 
-func TestNewRequest_TargetCommandWithSingleArgument(t *testing.T) {
+func TestNewSession_TargetCommandWithSingleArgument(t *testing.T) {
 	query := "google hello"
 
-	request := NewRequest(query)
+	request := NewSession(query, _HEADERS)
 
 	if (request.Command) != "google" {
 		t.Errorf("Command = %s, want 'google'", request.Command)
@@ -47,10 +50,10 @@ func TestNewRequest_TargetCommandWithSingleArgument(t *testing.T) {
 	}
 }
 
-func TestNewRequest_SlashCommandWithSingleArgument(t *testing.T) {
+func TestNewSession_SlashCommandWithSingleArgument(t *testing.T) {
 	query := "google/hello"
 
-	request := NewRequest(query)
+	request := NewSession(query, _HEADERS)
 
 	if (request.Command) != "google" {
 		t.Errorf("Command = %s, want 'google'", request.Command)
@@ -63,10 +66,10 @@ func TestNewRequest_SlashCommandWithSingleArgument(t *testing.T) {
 	}
 }
 
-func TestNewRequest_TargetCommandWithMultipleArguments(t *testing.T) {
+func TestNewSession_TargetCommandWithMultipleArguments(t *testing.T) {
 	query := "google hello world"
 
-	request := NewRequest(query)
+	request := NewSession(query, _HEADERS)
 
 	if (request.Command) != "google" {
 		t.Errorf("Command = %s, want 'google'", request.Command)
@@ -82,10 +85,10 @@ func TestNewRequest_TargetCommandWithMultipleArguments(t *testing.T) {
 	}
 }
 
-func TestNewRequest_SlashCommandWithMultipleArguments(t *testing.T) {
+func TestNewSession_SlashCommandWithMultipleArguments(t *testing.T) {
 	query := "google/hello world"
 
-	request := NewRequest(query)
+	request := NewSession(query, _HEADERS)
 
 	if (request.Command) != "google" {
 		t.Errorf("Command = %s, want 'google'", request.Command)
