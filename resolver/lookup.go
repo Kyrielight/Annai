@@ -19,6 +19,7 @@ func Lookup(s session.Session) *url.URL {
 	defaultRequest := session.Session{
 		Command:   "default",
 		Arguments: append([]string{s.Command}, s.Arguments...),
+		Metadata:  s.Metadata,
 	}
 
 	return defaultResolver.GetUrl(defaultRequest)
