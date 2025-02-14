@@ -2,13 +2,14 @@ package resolver
 
 import (
 	"bytes"
+	"net/http"
 	"testing"
 
-	"moe.best.annai/request"
 	"moe.best.annai/resolver/implementations/core"
 	"moe.best.annai/resolver/implementations/dictionaries"
 	"moe.best.annai/resolver/implementations/social"
 	"moe.best.annai/resolver/model"
+	"moe.best.annai/session"
 )
 
 func TestLookup_Default_CommandOnly_isGoogle(t *testing.T) {
@@ -45,18 +46,18 @@ func TestLookup_youtube_isYouTube(t *testing.T) {
 
 // Helper to assert a command points to a resolver.
 func testLookup(command string, expectedResolver model.Resolver, t *testing.T) {
-	r := request.NewRequest(command)
+	s := session.NewSession(command, http.Header{})
 
-	url := Lookup(r)
-	expectedUrl := expectedResolver.GetUrl(r)
+	url := Lookup(s)
+	expectedUrl := expectedResolver.GetUrl(s)
 
 	urlMarshal, error := url.MarshalBinary()
 	if error != nil {
-		t.Fatalf(error.Error())
+		t.Fatalf("%s", error.Error())
 	}
 	expectedUrlMarshal, error := url.MarshalBinary()
 	if error != nil {
-		t.Fatalf(error.Error())
+		t.Fatalf("%s", error.Error())
 	}
 	if !bytes.Equal(urlMarshal, expectedUrlMarshal) {
 		t.Fatalf("Url = '%s', wanted '%s'", url.String(), expectedUrl.String())

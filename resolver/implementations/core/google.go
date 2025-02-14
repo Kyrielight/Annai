@@ -6,8 +6,8 @@ import (
 
 	"golang.org/x/text/language"
 
-	"moe.best.annai/request"
 	"moe.best.annai/resolver/model"
+	"moe.best.annai/session"
 )
 
 var baseURLs = map[language.Tag]url.URL{
@@ -16,21 +16,17 @@ var baseURLs = map[language.Tag]url.URL{
 	language.Japanese:       {Scheme: "https", Host: "google.co.jp"},
 }
 
-func getGoogleUrl(r request.Request) *url.URL {
-	// Implicit default for this resolver is (no-region) English.
-	url := baseURLs[language.English]
+func getGoogleUrl(s session.Session) *url.URL {
 
-	if localUrl, exists := baseURLs[r.Tag]; exists {
-		url = localUrl
-	}
+	url, _ := s.Metadata.Language.MatchUrlMap(baseURLs, baseURLs[language.English])
 
-	if len(r.Arguments) == 0 {
+	if len(s.Arguments) == 0 {
 		return &url
 	}
 
 	url.Path = "search"
 	search := url.Query()
-	search.Set("q", strings.Join(r.Arguments, " "))
+	search.Set("q", strings.Join(s.Arguments, " "))
 	url.RawQuery = search.Encode()
 
 	return &url

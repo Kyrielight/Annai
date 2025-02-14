@@ -5,8 +5,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"moe.best.annai/request"
 	"moe.best.annai/resolver"
+	"moe.best.annai/session"
 )
 
 func main() {
@@ -16,10 +16,11 @@ func main() {
 
 		query := c.QueryParam("query")
 		if len(query) == 0 {
-			return c.String(http.StatusOK, resolver.Lookup(request.Request{}).String())
+			return c.String(http.StatusOK, resolver.Lookup(session.Session{}).String())
 		}
 
-		req := request.NewRequest(c.QueryParam("query"))
+		req := session.NewSession(c.QueryParam("query"), c.Request().Header)
+
 		return c.Redirect(http.StatusTemporaryRedirect, resolver.Lookup(req).String())
 	})
 	e.Logger.Fatal(e.Start(":8080"))

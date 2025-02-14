@@ -4,8 +4,8 @@ import (
 	"net/url"
 	"strings"
 
-	"moe.best.annai/request"
 	"moe.best.annai/resolver/model"
+	"moe.best.annai/session"
 )
 
 const searchPath = "search"
@@ -15,8 +15,8 @@ var baseURL = url.URL{
 	Host:   "jisho.org",
 }
 
-func getJishoURL(r request.Request) *url.URL {
-	if len(r.Arguments) == 0 {
+func getJishoURL(s session.Session) *url.URL {
+	if len(s.Arguments) == 0 {
 		return &baseURL
 	}
 
@@ -24,7 +24,7 @@ func getJishoURL(r request.Request) *url.URL {
 	// Append the base path, which is "search"
 	newUrl.Path = searchPath
 	// Append the user's search query in the path
-	newUrl = *newUrl.JoinPath(strings.Join(r.Arguments, " "))
+	newUrl = *newUrl.JoinPath(strings.Join(s.Arguments, " "))
 
 	return &newUrl
 }

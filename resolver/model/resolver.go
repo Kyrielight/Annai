@@ -3,9 +3,9 @@ package model
 import (
 	"net/url"
 
-	"moe.best.annai/request"
+	"moe.best.annai/session"
 )
 
 type Resolver struct {
-	GetUrl func(request.Request) *url.URL
+	GetUrl func(session.Session) *url.URL
 }
