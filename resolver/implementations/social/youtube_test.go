@@ -1,24 +1,40 @@
 package social
 
 import (
+	"net/http"
 	"testing"
 
-	"moe.best.annai/request"
+	"moe.best.annai/session"
 )
 
-func TestYouTubeGetUrl_Scheme(t *testing.T) {
-	request := request.NewRequest("yt")
+var emptyHeaders = http.Header{}
 
-	url := YOUTUBE().GetUrl(request)
+func TestYouTubeGetUrl_SchemeIsHttps(t *testing.T) {
+	s := session.NewSession("yt", emptyHeaders)
+
+	url := YOUTUBE().GetUrl(s)
 
 	if url.Scheme != "https" {
 		t.Errorf("Scheme = '%s', want 'https'", url.Scheme)
 	}
 }
-func TestYouTubeGetUrl_DefaultLanguageIsEnglish(t *testing.T) {
-	request := request.NewRequest("yt")
 
-	url := YOUTUBE().GetUrl(request)
+func TestYouTubeGetUrl_DefaultLanguageIsEnglish(t *testing.T) {
+	s := session.NewSession("yt", emptyHeaders)
+
+	url := YOUTUBE().GetUrl(s)
+
+	if url.Host != "youtube.com" {
+		t.Errorf("Host = '%s', want 'youtube.com'", url.Host)
+	}
+}
+
+func TestYouTubeGetUrl_LanguageProvided_IsIgnored(t *testing.T) {
+	headers := http.Header{}
+	headers.Add("Accept-Language", "en")
+	s := session.NewSession("yt", headers)
+
+	url := YOUTUBE().GetUrl(s)
 
 	if url.Host != "youtube.com" {
 		t.Errorf("Host = '%s', want 'youtube.com'", url.Host)
@@ -26,9 +42,9 @@ func TestYouTubeGetUrl_DefaultLanguageIsEnglish(t *testing.T) {
 }
 
 func TestYouTubeGetUrl_NoArguments(t *testing.T) {
-	request := request.NewRequest("yt")
+	s := session.NewSession("yt", emptyHeaders)
 
-	url := YOUTUBE().GetUrl(request)
+	url := YOUTUBE().GetUrl(s)
 
 	if url.Query().Has("query") {
 		t.Errorf("Query 'q' = '%s', want nothing", url.Query().Get("q"))
@@ -36,9 +52,9 @@ func TestYouTubeGetUrl_NoArguments(t *testing.T) {
 }
 
 func TestYouTubeGetUrl_WithArgument_PathSetToResults(t *testing.T) {
-	request := request.NewRequest("yt hello")
+	s := session.NewSession("yt hello", emptyHeaders)
 
-	url := YOUTUBE().GetUrl(request)
+	url := YOUTUBE().GetUrl(s)
 
 	if url.Path != "results" {
 		t.Errorf("Path = '%s', want 'results'", url.Path)
@@ -46,9 +62,9 @@ func TestYouTubeGetUrl_WithArgument_PathSetToResults(t *testing.T) {
 }
 
 func TestYouTubeGetUrl_SingleArgument(t *testing.T) {
-	request := request.NewRequest("yt hello")
+	s := session.NewSession("yt hello", emptyHeaders)
 
-	url := YOUTUBE().GetUrl(request)
+	url := YOUTUBE().GetUrl(s)
 
 	if !url.Query().Has("search_query") {
 		t.Fatalf("Query 'search_query' is not set")
@@ -60,9 +76,9 @@ func TestYouTubeGetUrl_SingleArgument(t *testing.T) {
 }
 
 func TestYouTubeGetUrl_MultipleArguments(t *testing.T) {
-	request := request.NewRequest("yt hello world")
+	s := session.NewSession("yt hello world", emptyHeaders)
 
-	url := YOUTUBE().GetUrl(request)
+	url := YOUTUBE().GetUrl(s)
 
 	if !url.Query().Has("search_query") {
 		t.Fatalf("Query 'search_query' is not set")
