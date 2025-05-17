@@ -16,11 +16,12 @@ var baseURL = url.URL{
 }
 
 func getJishoURL(s session.Session) *url.URL {
+	newUrl := baseURL
+
 	if len(s.Arguments) == 0 {
-		return &baseURL
+		return &newUrl
 	}
 
-	newUrl := baseURL
 	// Append the base path, which is "search"
 	newUrl.Path = searchPath
 	// Append the user's search query in the path
